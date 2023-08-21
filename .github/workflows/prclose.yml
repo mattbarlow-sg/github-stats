@@ -1,0 +1,43 @@
+name: Delete Resources
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  delete-stack:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Use Node.js 18.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 18.x
+
+    - name: Use Node.js 18.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+
+    - name: Install Serverless Framework
+      run: npm install -g serverless
+
+    - name: Remove Serverless Service
+      run: |
+        STAGE=${{ github.event.pull_request.number }}
+
+        if [[ -z "$STAGE" ]]; then
+          echo "Stage is empty, skipping removal."
+          exit 1
+        fi
+
+        echo "Removing Serverless service for stage: ${STAGE}"
+
+        serverless remove -s ${STAGE}
