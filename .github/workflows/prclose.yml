@@ -31,12 +31,12 @@ jobs:
 
     - name: Remove Serverless Service
       run: |
-        STAGE=${{ github.event.pull_request.number }}
-
-        if [[ -z "$STAGE" ]]; then
+        PR_NUMBER=${{ github.event.pull_request.number }}
+        if [[ -z "$PR_NUMBER" ]]; then
           echo "Stage is empty, skipping removal."
           exit 1
         fi
+        STAGE="pr-${PR_NUMBER}"
 
         echo "Removing Serverless service for stage: ${STAGE}"
 
